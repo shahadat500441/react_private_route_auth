@@ -1,4 +1,8 @@
+import { AuthContext } from "../context/AuthProvider";
+import {useContext} from "react"
+
 const Register = () => {
+  const {registerUser} = useContext(AuthContext)
 
     const handelRegister = (e)=>{
         e.preventDefault();
@@ -7,6 +11,15 @@ const Register = () => {
         const password = e.target.password.value;
         const conformPassword = e.target.conformPassword.value;
         console.log(name,email,password,conformPassword)
+
+        //register user in firebase
+        registerUser(email,password)
+        .then(result =>{
+          console.log(result.user)
+        })
+        .catch(error=>{
+          console.error(error.message)
+        })
     }
   return (
     <div className="max-w-[40%] mx-auto border border-red-500 mt-10 min-w-[500px] p-5 rounded-lg">
