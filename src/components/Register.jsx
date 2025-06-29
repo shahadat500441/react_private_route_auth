@@ -1,8 +1,11 @@
 import { AuthContext } from "../context/AuthProvider";
-import {useContext} from "react"
+import {useContext,useState} from "react"
 
 const Register = () => {
-  const {registerUser} = useContext(AuthContext)
+  const {registerUser} = useContext(AuthContext);
+  const [success,setSuccess] = useState("")
+  const [error, setError] = useState("");
+
 
     const handelRegister = (e)=>{
         e.preventDefault();
@@ -12,13 +15,28 @@ const Register = () => {
         const conformPassword = e.target.conformPassword.value;
         console.log(name,email,password,conformPassword)
 
+
+        setError("")
+        setSuccess('')
+
+        if(password.length < 6){
+          setError("Password must be 6 character or longer");
+        }
+        if(password !== conformPassword){
+          setError("Password didn't match");
+        }
+        if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password)){
+          setError("Password must be at least one character like a, A, 1, @")
+        }
+
         //register user in firebase
         registerUser(email,password)
         .then(result =>{
           console.log(result.user)
+          setSuccess("User Created Successfully!")
         })
         .catch(error=>{
-          console.error(error.message)
+         setError(error.message)
         })
     }
   return (
@@ -41,6 +59,12 @@ const Register = () => {
           <input name="conformPassword" type="password" placeholder="Conform Password" className="input w-full" />
         </div>
         <button className="btn btn-primary text-white font-bold w-full mt-2">Register</button>
+        {
+          error && <p className="text-red-600">{error}</p>
+        }
+        {
+          success && <p className="text-green-600">{success}</p>
+        }
       </form>
     </div>
   );
