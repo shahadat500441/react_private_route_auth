@@ -33,7 +33,7 @@ const Register = () => {
         registerUser(email,password)
         .then(result =>{
           console.log(result.user)
-          setSuccess("User Created Successfully!")
+          
         })
         .catch(error=>{
          setError(error.message)
